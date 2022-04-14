@@ -1,0 +1,6 @@
+[submodule "cyCombine_test"]
+	path = cyCombine_test
+	url = git@github.com:mariamurach/cyCombine_test.git
+[submodule "cyTOF_zurich"]
+	path = cyTOF_zurich
+	url = git@github.com:mariamurach/cyTOF_zurich.git
