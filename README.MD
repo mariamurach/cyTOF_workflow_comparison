@@ -64,6 +64,8 @@ Comments:
 
 This measure can be used to compare tested algorithms. 
 
+* repos: https://github.com/jacoblevine/PhenoGraph
+* https://github.com/scverse/scanpy/tree/2e98705347ea484c36caa9ba10de1987b09081bf
 
 
 ## Other interesting papers: 
