@@ -68,5 +68,22 @@ This measure can be used to compare tested algorithms.
 * https://github.com/scverse/scanpy/tree/2e98705347ea484c36caa9ba10de1987b09081bf
 
 
+## DSFMix
+
+ 
+
+1. Input Data
+    * "This study outlines dynamic spanning forest mixtures (DSFMix), a computational framework (Figure 1) that has temporal or staged single-cell data collected at discrete time points as input and a mixture of discrete and/or continuous lineages as the output"
+2. QC 
+3. Preproccesing
+4. Clustering
+5. Metaclustering
+    1. Automatic
+    2. Manual 
+6. Differential abundance analysis
+7. Differential expression analysis
+
+
+
 ## Other interesting papers: 
 * https://www.cell.com/cell/fulltext/S0092-8674(15)00637-6?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867415006376%3Fshowall%3Dtrue
