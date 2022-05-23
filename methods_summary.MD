@@ -21,7 +21,7 @@
 *  **USES MEDIAN MARKER EXPRESSION TRANSFORMED 0-1. DENDROGRAM AND HIERARCHICAL STRUCTURE OF METACLUSTERS IS USING ARCSINH.** 
     * We can then investigate characteristics of identified clusters with heatmaps that illustrate median marker expression in each cluster (Figure 6). As the range of marker expression can vary substantially from marker to marker, we use the 0-1 transformed data for some visualizations (argument scale = TRUE in the respective plotting functions). However, to stay consistent with FlowSOM and ConsensusClusterPlus, we use the (arcsinh-transformed) unscaled data to generate the dendrogram of the hierarchical structure of metaclusters.
 * **OPTION TO PLOT EXPRESSION FOR EACH MARKER** Instead of using only medians, which do not give a full representation of cluster specifics, one can plot the entire marker expression distribution in each cluster (Figure 7). Such a plot gives more detailed profile of each cluster, but represents a larger amount of information to interpret. Heatmaps give an overall overview of clusters, are quicker and easier to interpret, and together with the dendrogram can be a good basis for further cluster merging (see Cluster merging and annotation section).
-* **OPTION TO PLOT FUNCTIONAL MARKERS AND p6 SIGNALING MARKER**
+* **OPTION TO PLOT FUNCTIONAL MARKERS AND SIGNALING MARKER**
 We propose a heatmap that depicts median expression of functional markers in each sample (Figure 8) such that the potential differential expression can be investigated already at this data exploration step before the formal testing is done. In order to plot all the heatmaps in one panel, we use the ComplexHeatmap package16.
 Heatmap on the right represents the median of the arcsinh, 0-1 transformed marker expression for a signaling marker pS6 calculated over cells in each sample (columns) individually.
 * For all heatmaps, ComplexHeatmap package is used 
@@ -41,5 +41,52 @@ character string specifying the agglomeration method to use in hclust for hierar
     * The t-SNE algorithm comprises two main stages. 
     1. First, t-SNE constructs a probability distribution over pairs of high-dimensional objects in such a way that similar objects are assigned a higher probability while dissimilar points are assigned a lower probability. 
     2. t-SNE defines a similar probability distribution over the points in the low-dimensional map, and it minimizes the Kullback–Leibler divergence (KL divergence - how simnilar or unsimilar are 2 distributions) between the two distributions with respect to the locations of the points in the map. While the original algorithm uses the Euclidean distance between objects as the base of its similarity metric, this can be changed as appropriate
+* MDS
+* PCA
 
 ## Metaclustering 
+* Manual
+* Number of clusters picked by elbow criterium 
+
+## Differential analysis
+### Differential cell population abundance
+* Uses diffcyt package (package specifically for cytometry results)
+* Diffcyt allows for:
+  method_DA = c("diffcyt-DA-edgeR", "diffcyt-DA-voom", "diffcyt-DA-GLMM"),
+  method_DS = c("diffcyt-DS-limma", "diffcyt-DS-LMM")
+  DA - differential abundance, DS - differential State
+* Limma : linear regression plus Bayes smoothing to the standard errors 
+$$Y_i = \beta_0 + \beta_1 X_i + \epsilon_i$$
+  Benchmark article: https://www.nature.com/articles/s42003-019-0415-5
+* voom: Transform count data to log2-counts per million (logCPM), estimate the mean-variance relationship and use this to compute appropriate observation-level weights. The data are then ready for linear modelling.
+* edgeR uses the quantile-adjusted conditional maximum likelihood (qCML) method for experiments with single factor. https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf
+quantile-adjusted conditional maximum likelihood
+https://www.pathwaycommons.org/guide/primers/data_analysis/rna_sequencing_analysis/
+
+![](https://www.pathwaycommons.org/guide/primers/data_analysis/rna_sequencing_analysis/figure_quantile_adjust.png)
+* Can identify (comprise) random effect in samples to model overdispersion in proportions. 
+* Can use GLMM and logit transformation (GENERALIZED LINEAR MIXED MODELS)
+
+Generalized linear mixed models (or GLMMs) are an extension of linear mixed models to allow response variables from different distributions, such as binary responses. Alternatively, you could think of GLMMs as an extension of generalized linear models (e.g., logistic regression) to include both fixed and random effects (hence mixed models). The general form of the model (in matrix notation) is:
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="bold">y</mi>
+  </mrow>
+  <mo>=</mo>
+  <mi mathvariant="bold-italic">X</mi>
+  <mi mathvariant="bold-italic">&#x3B2;</mi>
+  <mo>+</mo>
+  <mi mathvariant="bold-italic">Z</mi>
+  <mi mathvariant="bold-italic">u</mi>
+  <mo>+</mo>
+  <mi mathvariant="bold-italic">&#x3B5;</mi>
+</math>
+
+Where  is a  column vector, the outcome variable;  is a  matrix of the  predictor variables;  is a  column vector of the fixed-effects regression coefficients (the s);  is the  design matrix for the  random effects (the random complement to the fixed ;  is a  vector of the random effects (the random complement to the fixed ; and  is a  column vector of the residuals, that part of  that is not explained by the model, . To recap:
+
+$$\overbrace{\mathbf{y}}^{{N \times 1}} \quad = \quad
+\overbrace{\underbrace{\mathbf{X}}_{{N \times p}} \quad \underbrace{\boldsymbol{\beta}}_{{p \times 1}}}^{{N \times 1}} \quad + \quad
+\overbrace{\underbrace{\mathbf{Z}}_{{N \times q}} \quad \underbrace{\boldsymbol{u}}_{{q \times 1}}}^{{N \times 1}} \quad + \quad
+\overbrace{\boldsymbol{\varepsilon}}^{{N \times 1}}$$
+
